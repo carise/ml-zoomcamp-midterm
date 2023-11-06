@@ -1,11 +1,13 @@
 
-# Background
+# Heart disease prediction
 
-This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am training and dpeloying is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can build a model that predicts whether or not someone has heart failure based on various clinical measurements.
+## Background
+
+This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am training and dpeloying is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can predict whether or not someone has heart failure based on various clinical measurements, such as cholesterol, whether the patient has diabetes, etc. I thought this was an interesting dataset because I was diagnosed with gestational diabetes and done a little bit of research to understand the long-term effects.
 
 As part of this project, I have a prepared a notebook to do exploratory data analysis, train several models, and select the model with the best performance. I have also created a Flask API that deploys the model as a web service.
 
-Important files in this project:
+## Important files in this project
 
 * `notebook.ipynb`: the notebook containing the data analysis and model training
 * `train.py`: the Python script to train the selected model with the tuned parameters
@@ -35,7 +37,22 @@ pipenv run gunicorn --bind 0.0.0.0:8080 predict:app
 
 ## Sending test data to server
 
-Sample data
+Possible values for the input data, from the Kaggle dataset description:
+
+* age: age of the patient [years]
+* sex: sex of the patient [M: Male, F: Female]
+* chestpaintype: chest pain type [TA: Typical Angina, ATA: Atypical Angina, NAP: Non-Anginal Pain, ASY: Asymptomatic]
+* restingbp: resting blood pressure [mm Hg]
+* cholesterol: serum cholesterol [mm/dl]
+* fastingbs: fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]
+* restingecg: resting electrocardiogram results [Normal: Normal, ST: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH: showing probable or definite left ventricular hypertrophy by Estes' criteria]
+* maxhr: maximum heart rate achieved [Numeric value between 60 and 202]
+* exerciseangina: exercise-induced angina [Y: Yes, N: No]
+* oldpeak: oldpeak = ST [Numeric value measured in depression]
+* st_slope: the slope of the peak exercise ST segment [Up: upsloping, Flat: flat, Down: downsloping]
+
+
+### Sample data
 
 ```json
 {
@@ -53,7 +70,10 @@ Sample data
 }
 ```
 
-Use a tool like postman or curl
+### Using postman
+![postman](img/postman_local.png)
+
+### Using curl
 ```
 curl -X 'POST' http://localhost:8080/predict -H 'Content-Type: application/json' -d '{
     "age": 50,
@@ -86,9 +106,24 @@ You can issue requests directly to server running in the Docker container. See [
 
 ## Cloud deployment
 
-I've deployed the model to AWS Elastic Beanstalk. You can send prediction requests to TBD.
+I've deployed the model to AWS Elastic Beanstalk. You can send prediction requests to [this endpoint](http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict).
 
-Example:
+### Using postman
+![postman](img/postman_cloud.png)
 
+### Using curl
 ```
+curl -X 'POST' http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict/predict -H 'Content-Type: application/json' -d '{
+    "age": 50,
+    "sex": "M",
+    "chestpaintype": "ASY",
+    "restingbp": 140,
+    "cholesterol": 220,
+    "fastingbs": 0,
+    "restingecg": "Abnormal",
+    "maxhr": 200,
+    "exerciseangina": "N",
+    "oldpeak": 0.0,
+    "st_slope": "Up"
+}'
 ```
