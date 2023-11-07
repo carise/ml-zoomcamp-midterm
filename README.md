@@ -1,9 +1,9 @@
 
 # Heart disease prediction
 
-## Background
+## Problem statement
 
-This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am training and dpeloying is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can predict whether or not someone has heart failure based on various clinical measurements, such as cholesterol, whether the patient has diabetes, etc. I thought this was an interesting dataset because I was diagnosed with gestational diabetes and done a little bit of research to understand the long-term effects.
+This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am training and dpeloying is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can predict whether or not someone has heart failure based on various clinical measurements, such as cholesterol, whether the patient has diabetes, etc. I thought this was an interesting dataset because I was diagnosed with gestational diabetes and did a little bit of research to understand the long-term effects, like on the heart.
 
 As part of this project, I have a prepared a notebook to do exploratory data analysis, train several models, and select the model with the best performance. I have also created a Flask API that deploys the model as a web service.
 
@@ -22,14 +22,30 @@ As part of this project, I have a prepared a notebook to do exploratory data ana
 
 ## Install dependencies
 
-Prerequesites: Python 3.10+, `pipenv`
+Prerequisites: Python 3.10+, `pipenv`
 
-Then install pip dependencies
+Install pip dependencies
 ```
 pipenv install
 ```
 
+If you want to run the notebook, you'll also want to install the dev dependencies
+```
+pipenv install --dev
+```
+
+## Jupyter notebook
+
+The notebook contains the data cleaning, analysis, and model training.
+
+To run the notebook:
+```
+pipenv run jupyter notebook
+```
+
 ## Run server locally
+
+The trained model can be deployed in a web service (a Flask API). To start the server:
 
 ```
 pipenv run gunicorn --bind 0.0.0.0:8080 predict:app
@@ -37,7 +53,9 @@ pipenv run gunicorn --bind 0.0.0.0:8080 predict:app
 
 ## Sending test data to server
 
-Possible values for the input data, from the Kaggle dataset description:
+The next step is to send data to the server. The server expects an HTTP `POST`` request with JSON data.
+
+Possible values for the data, from the Kaggle dataset description:
 
 * age: age of the patient [years]
 * sex: sex of the patient [M: Male, F: Female]
@@ -71,9 +89,15 @@ Possible values for the input data, from the Kaggle dataset description:
 ```
 
 ### Using postman
+
+You can use [Postman](https://www.postman.com/downloads/) to send requests to the API.
+
 ![postman](img/postman_local.png)
 
 ### Using curl
+
+If you prefer to issue requests via commandline, you can use `curl`.
+
 ```
 curl -X 'POST' http://localhost:8080/predict -H 'Content-Type: application/json' -d '{
     "age": 50,
@@ -92,6 +116,8 @@ curl -X 'POST' http://localhost:8080/predict -H 'Content-Type: application/json'
 
 ## Docker
 
+Docker makes it easy to deploy the API and model because the application and its dependencies can be packaged up and deployed.
+
 Build the Docker image:
 ```
 docker build -t heart-disease .
@@ -106,14 +132,14 @@ You can issue requests directly to server running in the Docker container. See [
 
 ## Cloud deployment
 
-I've deployed the model to AWS Elastic Beanstalk. You can send prediction requests to [this endpoint](http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict).
+I've deployed the model to AWS Elastic Beanstalk. You can send prediction requests (`POST`) to [this endpoint](http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict).
 
 ### Using postman
 ![postman](img/postman_cloud.png)
 
 ### Using curl
 ```
-curl -X 'POST' http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict/predict -H 'Content-Type: application/json' -d '{
+curl -X 'POST' http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict -H 'Content-Type: application/json' -d '{
     "age": 50,
     "sex": "M",
     "chestpaintype": "ASY",
@@ -126,4 +152,9 @@ curl -X 'POST' http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elas
     "oldpeak": 0.0,
     "st_slope": "Up"
 }'
+```
+
+Response:
+```json
+{"heart_disease":false,"heart_disease_probability":0.47290852883655105}
 ```
