@@ -3,7 +3,7 @@
 
 ## Problem statement
 
-This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am training and dpeloying is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can predict whether or not someone has heart failure based on various clinical measurements, such as cholesterol, whether the patient has diabetes, etc. I thought this was an interesting dataset because I was diagnosed with gestational diabetes and did a little bit of research to understand the long-term effects, like on the heart.
+This is the midterm project for DataTalksClub's Machine Learning Zoomcamp. The model I am trained and deployed is the [Heart Failure prediction dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) from Kaggle. The hypothesis is that we can predict whether or not someone has heart failure based on various clinical measurements, such as cholesterol, whether the patient has diabetes, etc. I thought this was an interesting dataset because I was diagnosed with gestational diabetes and did a little bit of research to understand the long-term effects, like on the heart.
 
 As part of this project, I have a prepared a notebook to do exploratory data analysis, train several models, and select the model with the best performance. I have also created a Flask API that deploys the model as a web service.
 
@@ -19,6 +19,8 @@ As part of this project, I have a prepared a notebook to do exploratory data ana
  
 
 # How to run the model API
+
+The commands provided in this README have been tested in Mac OS, and should also work in Linux and WSL.
 
 ## Install dependencies
 
@@ -53,7 +55,7 @@ pipenv run gunicorn --bind 0.0.0.0:8080 predict:app
 
 ## Sending test data to server
 
-The next step is to send data to the server. The server expects an HTTP `POST`` request with JSON data.
+The next step is to send data to the server. The server expects an HTTP `POST` request with JSON data.
 
 Possible values for the data, from the Kaggle dataset description:
 
@@ -116,7 +118,7 @@ curl -X 'POST' http://localhost:8080/predict -H 'Content-Type: application/json'
 
 ## Docker
 
-Docker makes it easy to deploy the API and model because the application and its dependencies can be packaged up and deployed.
+Docker provides a consistent way to package and deploy the API and model.
 
 Build the Docker image:
 ```
@@ -132,7 +134,9 @@ You can issue requests directly to server running in the Docker container. See [
 
 ## Cloud deployment
 
-I've deployed the model to AWS Elastic Beanstalk. You can send prediction requests (`POST`) to [this endpoint](http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict).
+I've deployed the model to AWS Elastic Beanstalk.
+
+You can send prediction requests (`POST`) to [this endpoint](http://heart-disease-prediction-env-1.eba-z82tjh3n.us-west-2.elasticbeanstalk.com/predict).
 
 ### Using postman
 ![postman](img/postman_cloud.png)
